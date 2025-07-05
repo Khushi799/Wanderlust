@@ -1,0 +1,62 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-5 pb-5">
+  <h1 class="mb-4 text-center" style="color: #fe424d;">Your Profile</h1>
+
+  <!-- Bookings Section -->
+  <section>
+    <h3>Your Bookings</h3>
+
+    <% const validBookings = bookings.filter(b => b.listingId); %>
+
+    <% if (validBookings.length > 0) { %>
+      <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+        <% validBookings.forEach(booking => { %>
+          <div class="col">
+            <div class="card border-primary shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= booking.listingId.title || "Listing title not available" %>
+                </h5>
+                <p class="card-text">
+                  📅 <strong>From:</strong> <%= booking.startDate.toDateString() %><br>
+                  📅 <strong>To:</strong> <%= booking.endDate.toDateString() %><br>
+                  💰 <strong>Total:</strong> ₹<%= booking.totalPrice %>
+                </p>
+                <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST" class="mt-2 mb-3" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                  <button type="submit" class="btn btn-dark col-5 book-btn offset-3">Cancel Booking</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="alert alert-warning">You have no bookings yet.</div>
+    <% } %>
+  </section>
+
+  <!-- Listings Section -->
+  <section class="mt-5">
+    <h3>Your Listings</h3>
+
+    <% if (listings.length > 0) { %>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <% listings.forEach(listing => { %>
+          <div class="col">
+            <div class="card border-success shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">
+                  🏠 <a href="/listings/<%= listing._id %>" style="text-decoration: none;"><%= listing.title %></a>
+                </h5>
+                <p class="card-text">💰 ₹<%= listing.price %></p>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="alert alert-warning mt-3">You haven't created any listings yet.</div>
+    <% } %>
+  </section>
+</div>
